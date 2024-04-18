@@ -9,7 +9,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class EcommerceUserServiceApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(EcommerceUserServiceApplication.class, args);
 	}
+
+
+
+
 
 }
