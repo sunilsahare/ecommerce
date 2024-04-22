@@ -1,5 +1,6 @@
 package com.ecommerce.common.exception;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,8 @@ public class BusinessException extends RuntimeException {
         super(message);
     }
 
-    public BusinessException(List<FieldError> fieldErrors) {
+    public BusinessException(List<FieldError> fieldErrors, String message) {
+        super(message);
         this.fieldErrors.addAll(fieldErrors);
     }
 
