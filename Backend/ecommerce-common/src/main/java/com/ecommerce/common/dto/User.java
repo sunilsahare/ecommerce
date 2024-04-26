@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +28,9 @@ public class User {
     private boolean active;
     private boolean deleted;
     private Long userInfoId;
-    private @Valid UserInfoDto userInfo;
+
+    @Valid
+    private UserInfoDto userInfo;
+
+    private List<@Valid Document> documents;
 }

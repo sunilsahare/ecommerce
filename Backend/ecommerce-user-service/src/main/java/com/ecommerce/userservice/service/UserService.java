@@ -1,7 +1,10 @@
 package com.ecommerce.userservice.service;
 
+import com.ecommerce.common.dto.Document;
 import com.ecommerce.common.dto.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 

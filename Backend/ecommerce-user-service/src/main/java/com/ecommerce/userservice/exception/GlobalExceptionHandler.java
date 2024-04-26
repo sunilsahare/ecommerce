@@ -17,6 +17,27 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+
+        List<com.ecommerce.common.exception.FieldError> fieldErrorList = fieldErrors.stream()
+                .map(fieldError -> com.ecommerce.common.exception.FieldError.builder()
+                        .fieldName(fieldError.getField())
+                        .message(fieldError.getDefaultMessage())
+                        .build())
+                .collect(Collectors.toList());
+
+        var response = ApiResponse.builder()
+                .status("FAILED")
+                .message("Validation failed")
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .fieldErrors(fieldErrorList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse> businessException(BusinessException exception) {
         ApiResponse response = ApiResponse.builder()
@@ -44,26 +65,6 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-
-        List<com.ecommerce.common.exception.FieldError> fieldErrorList = fieldErrors.stream()
-                .map(fieldError -> com.ecommerce.common.exception.FieldError.builder()
-                        .fieldName(fieldError.getField())
-                        .message(fieldError.getDefaultMessage())
-                        .build())
-                .collect(Collectors.toList());
-
-        var response = ApiResponse.builder()
-                .status("FAILED")
-                .message("Validation failed")
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .fieldErrors(fieldErrorList)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> exception(Exception exception) {

@@ -1,9 +1,7 @@
 package com.ecommerce.common.dto;
 
 import com.ecommerce.common.constant.Gender;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Data
@@ -34,8 +32,9 @@ public class UserInfoDto {
     @NotBlank(message = "Country is required")
     @Size(min = 3, max = 128, message = "Country value should be min 3 and max 128 characters")
     private String country;
-    @NotBlank(message = "Pin code is required")
-    @Size(min = 6, max = 6, message = "Pin code value should be 6 digit")
+    @NotNull(message = "Pin code is required")
+    @Min(value = 100000, message = "Pin code must be at least 6 digits long")
+    @Max(value = 999999, message = "Pin code cannot exceed 6 digits")
     private Integer pincode;
     @NotBlank(message = "Gender is required")
     private String gender;

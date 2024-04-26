@@ -6,6 +6,7 @@ import com.ecommerce.common.dto.UserInfoDto;
 import com.ecommerce.common.exception.BusinessException;
 import com.ecommerce.userservice.entity.UserInfo;
 import com.ecommerce.userservice.helper.UserHelper;
+import com.ecommerce.userservice.repo.DocumentRepository;
 import com.ecommerce.userservice.repo.UserInfoRepository;
 import com.ecommerce.userservice.repo.UserRepository;
 import com.ecommerce.userservice.service.UserService;
@@ -24,11 +25,16 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private UserInfoRepository userInfoRepository;
 
+    private DocumentRepository documentRepository;
+
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(UserRepository userRepository, UserInfoRepository userInfoRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserInfoRepository userInfoRepository
+        ,DocumentRepository documentRepository
+    ) {
         this.userRepository = userRepository;
         this.userInfoRepository = userInfoRepository;
+        this.documentRepository = documentRepository;
     }
 
     @Transactional

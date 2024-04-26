@@ -3,7 +3,6 @@ package com.ecommerce.userservice.controller;
 import com.ecommerce.common.dto.User;
 import com.ecommerce.userservice.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserRestController {
 
     private UserService userService;

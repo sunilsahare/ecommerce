@@ -4,6 +4,8 @@ package com.ecommerce.userservice.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(
         name = "users",
@@ -27,4 +29,6 @@ public class User {
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="user_info_id")
     private UserInfo userInfo;
+    @OneToMany(mappedBy = "user")
+    private List<Document> documents;
 }
