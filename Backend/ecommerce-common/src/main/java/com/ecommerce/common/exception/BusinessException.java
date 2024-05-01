@@ -15,6 +15,14 @@ public class BusinessException extends RuntimeException {
 
     }
 
+    public BusinessException(ApiResponse apiResponse) {
+        this(apiResponse.getMessage());
+        fieldErrors = apiResponse.getFieldErrors() == null || apiResponse.getFieldErrors().isEmpty()  ? new ArrayList<>() : apiResponse.getFieldErrors();
+        fieldErrors.addAll(fieldErrors);
+        mapList = apiResponse.getMapList() == null || apiResponse.getMapList().isEmpty() ? new HashMap<>() : apiResponse.getMapList();
+        mapList.putAll(mapList);
+    }
+
     public BusinessException(String message) {
         super(message);
     }
