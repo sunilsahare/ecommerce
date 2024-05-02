@@ -1,10 +1,11 @@
 package com.ecommerce.userservice.service;
 
-import com.ecommerce.common.dto.Document;
+import com.ecommerce.common.dto.Filter;
 import com.ecommerce.common.dto.User;
-import org.springframework.web.multipart.MultipartFile;
+import com.ecommerce.common.dto.UserSearchData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +15,17 @@ public interface UserService {
     public User updateUser(User user);
     public void deleteUser(Long userId);
     public User getUser(Long userId);
-    public List<User> getAllUser();
+
+    Page<User> getAllUsersById(List<Long> userId, Pageable page);
+
+    List<User> getAllActiveNonDeletedUsersById(List<Long> userId);
+
+    public Page<User> getAllUser(Pageable pageable);
 
     public Optional<com.ecommerce.userservice.entity.User> getUserByUserId(Long userId);
+
+    List<UserSearchData> getUserFilterData(List<Filter> filters, Pageable pageable) throws NoSuchFieldException;
+
     public void isUsernameExist(String username);
     public void isEmailExist(String email);
     public Optional<com.ecommerce.userservice.entity.UserInfo> getUserByEmail(String email);

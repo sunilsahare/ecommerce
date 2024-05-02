@@ -1,18 +1,25 @@
 package com.ecommerce.userservice.serviceimpl;
 
 import com.ecommerce.common.constant.Role;
+import com.ecommerce.common.dto.Filter;
 import com.ecommerce.common.dto.User;
 import com.ecommerce.common.dto.UserInfoDto;
+import com.ecommerce.common.dto.UserSearchData;
 import com.ecommerce.common.exception.BusinessException;
 import com.ecommerce.userservice.entity.UserInfo;
+import com.ecommerce.userservice.external.services.DocumentServiceClient;
 import com.ecommerce.userservice.helper.UserHelper;
 import com.ecommerce.userservice.repo.DocumentRepository;
+import com.ecommerce.userservice.repo.UserSearchFilterRepository;
 import com.ecommerce.userservice.repo.UserInfoRepository;
 import com.ecommerce.userservice.repo.UserRepository;
 import com.ecommerce.userservice.service.UserService;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +33,21 @@ public class UserServiceImpl implements UserService {
     private UserInfoRepository userInfoRepository;
 
     private DocumentRepository documentRepository;
+    private UserSearchFilterRepository dynamicFilterRepository;
+
+    private DocumentServiceClient documentServiceClient;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository userRepository, UserInfoRepository userInfoRepository
-        ,DocumentRepository documentRepository
+        ,DocumentRepository documentRepository, UserSearchFilterRepository dynamicFilterRepository,
+                           DocumentServiceClient documentServiceClient
     ) {
         this.userRepository = userRepository;
         this.userInfoRepository = userInfoRepository;
         this.documentRepository = documentRepository;
+        this.dynamicFilterRepository = dynamicFilterRepository;
+        this.documentServiceClient = documentServiceClient;
     }
 
     @Transactional
@@ -95,9 +108,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
+    public Page<User> getAllUsersById(List<Long> userId, Pageable page) {
+        List<User> dtoList = UserHelper.toDtoList(userRepository.getAllUsersByUserId(userId, page).getContent());
+        return new PageImpl<>(dtoList);
+    }
+
+    @Override
+    public List<User> getAllActiveNonDeletedUsersById(List<Long> userId) {
+        return UserHelper.toDtoList(userRepository.getAllActiveNonDeletedUsers(userId));
+    }
+
+    @Override
+    public Page<User> getAllUser(Pageable pageable)  {
         LOG.info("Fetching All users from db");
-        return UserHelper.toDtoList(userRepository.findAll());
+        Page<com.ecommerce.userservice.entity.User> usersPage = userRepository.findAll(pageable);
+        return new PageImpl<>(UserHelper.toDtoList(usersPage.getContent()));
+
+    }
+    @Override
+    public List<UserSearchData> getUserFilterData(List<Filter> filters, Pageable pageable) throws NoSuchFieldException {
+        List<UserSearchData> userSearchData = dynamicFilterRepository.applyDynamicFilter(filters);
+        LOG.info("User filter Data - {}", userSearchData);
+        return userSearchData;
+
     }
 
     @Override
@@ -106,7 +139,7 @@ public class UserServiceImpl implements UserService {
             LOG.info("Username is empty - {}",username);
            return;
         }
-        getUserByUsername(username).ifPresent(user -> new BusinessException("Please user another username"));
+        getUserByUsername(username).ifPresent((user) -> new BusinessException("Please user another username"));
     }
 
     @Override
@@ -115,7 +148,7 @@ public class UserServiceImpl implements UserService {
             LOG.info("Email is empty - {}",email);
            return;
         }
-        getUserByEmail(email).ifPresent(user -> new BusinessException("Please user another Email"));
+        getUserByEmail(email).ifPresent((user) -> new BusinessException("Please user another Email"));
     }
 
     @Override

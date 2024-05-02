@@ -29,7 +29,6 @@ public class UserInfo {
     private String state;
     private String country;
     private Integer pincode;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
     private String profileUrl;
 }
