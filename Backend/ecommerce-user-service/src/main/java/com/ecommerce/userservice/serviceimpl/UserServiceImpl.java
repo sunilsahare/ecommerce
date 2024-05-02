@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<com.ecommerce.userservice.entity.User> getUserByUserId(Long userId) {
-        return userRepository.findById(userId);
+        return Optional.ofNullable(userRepository.findById(userId).orElseThrow(() -> new BusinessException("Invalid userId")));
     }
 
     @Override
