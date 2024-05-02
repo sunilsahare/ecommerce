@@ -17,7 +17,7 @@ public class UserSearchData {
     private String country;
     private String email;
     private String fullName;
-    private Gender gender;
+    private String gender;
     private String lane;
     private String mobile;
     private String street;
@@ -27,7 +27,7 @@ public class UserSearchData {
 
     // [java.lang.Long, java.lang.String, java.lang.String, java.lang.Boolean, java.lang.Long, java.lang.String, java.lang.String, java.lang.String, com.ecommerce.common.constant.Gender, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Integer, java.lang.String]
 
-    public UserSearchData(Long userId, String username, String role, Boolean active, Long userInfoId, String country, String email, String fullName, Gender gender, String lane, String mobile, String street, String state, Integer pincode, String profileUrl) {
+    public UserSearchData(Long userId, String username, String role, Boolean active, Long userInfoId, String country, String email, String fullName, String gender, String lane, String mobile, String street, String state, Integer pincode, String profileUrl) {
         this.userId = userId;
         this.username = username;
         this.Role = role;
